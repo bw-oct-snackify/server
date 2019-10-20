@@ -16,32 +16,45 @@ function getUsers() {
 }
 
 async function addUser(user) {
-    let { email, password, company_code } = user;
+    let { name, email, password, company_code } = user;
     password = b.hashSync(password, 12);
+    let company_ID;
 
-    try {
-        company_ID = await db
-            .select('company_ID')
-            .from('companies')
-            .where('company_code', company_code)
-            .first();
-        if (!company_ID) {
-            company_ID = await db('companies')
-                .insert()
-                .returning('company_ID');
+    //TODO: Check if the email is already associated with a company account
+
+    //
+    //If there is a company_code provided, get the company ID
+    if (company_code) {
+        try {
+            company_ID = await db
+                .select('company_ID')
+                .from('companies')
+                .where('company_code', company_code)
+                .first();
+            company_ID = company_ID.company_ID;
+        } catch (e) {
+            console.log('addUser: There was an error: ', e);
+            Promise.resolve(false);
         }
-    } catch (e) {
-        console.log('addUser: There was an error: ', e);
-        Promise.resolve(false);
     }
+    //
+    //If there is no company_code provided, create a new one
+    if (!company_ID) {
+        [company_ID] = await db('companies')
+            .insert({})
+            .returning('company_ID');
+    }
+
+    console.log(company_ID);
 
     return db('users')
         .insert({
+            name,
             email,
             password,
             company_ID,
         })
-        .returning('user_id', 'name', 'email');
+        .returning('name');
 }
 
 async function login(user) {

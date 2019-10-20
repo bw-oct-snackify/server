@@ -4,7 +4,7 @@ const { registerReqs, takenEmail, loginReqs } = require('../middleware');
 
 //
 //Registration
-router.post('/register', registerReqs, takenEmail, async (req, res, next) => {
+router.post('/register', registerReqs, async (req, res, next) => {
     let user = req.body;
     try {
         let createdUser = await Users.addUser(user);
