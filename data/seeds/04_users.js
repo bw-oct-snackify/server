@@ -3,11 +3,16 @@ const b = require('bcryptjs');
 exports.seed = function(knex) {
     // Deletes ALL existing entries
     return knex('users')
-        .truncate()
+        .del()
         .then(function() {
             // Inserts seed entries
             return knex('users').insert([
-                { username: 'test', password: b.hashSync('password', 10) },
+                {
+                    company_ID: 1,
+                    name: 'Amanda Lane',
+                    email: 'test@test.com',
+                    password: b.hashSync('password', 10),
+                },
             ]);
         });
 };

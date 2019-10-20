@@ -38,7 +38,7 @@ exports.up = function(knex) {
         })
         .createTable('user_snacks', t => {
             //
-            //Company ID
+            //user ID
             t.integer('user_ID').unsigned();
             t.foreign('user_ID')
                 .references('user_ID')
