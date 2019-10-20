@@ -1,9 +1,12 @@
 exports.up = function(knex) {
     return knex.schema.createTable('snacks', t => {
         t.increments('snack_ID');
-        t.string('name');
-        t.string('brand');
-        t.string('img_url');
+        t.string('name').notNullable();
+        t.string('brand').notNullable();
+        t.string('uom')
+            .notNullable()
+            .comment('unit of measure');
+        t.string('img_url').notNullable();
     });
 };
 
