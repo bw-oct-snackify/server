@@ -7,7 +7,7 @@ const db = knex(config);
 module.exports = {
     getUsers,
     addUser,
-    checkUsername,
+    checkEmail,
     login,
 };
 
@@ -15,25 +15,42 @@ function getUsers() {
     return db('users');
 }
 
-function addUser(user) {
-    let { username, password } = user;
+async function addUser(user) {
+    let { email, password, company_code } = user;
     password = b.hashSync(password, 12);
+
+    try {
+        company_ID = await db
+            .select('company_ID')
+            .from('companies')
+            .where('company_code', company_code)
+            .first();
+        if (!company_ID) {
+            company_ID = await db('companies')
+                .insert()
+                .returning('company_ID');
+        }
+    } catch (e) {
+        console.log('addUser: There was an error: ', e);
+        Promise.resolve(false);
+    }
 
     return db('users')
         .insert({
-            username,
+            email,
             password,
+            company_ID,
         })
-        .returning('user_id', 'username');
+        .returning('user_id', 'name', 'email');
 }
 
 async function login(user) {
-    let { username, password } = user;
+    let { email, password } = user;
     console.log('User: ', user);
     let hash = await db
         .select('password')
         .from('users')
-        .where({ username })
+        .where({ email })
         .first();
 
     console.log(hash);
@@ -50,8 +67,8 @@ async function login(user) {
     return Promise.resolve(false);
 }
 
-function checkUsername(username) {
+function checkEmail(email) {
     return db('users')
-        .where('username', username)
+        .where('email', email)
         .first();
 }

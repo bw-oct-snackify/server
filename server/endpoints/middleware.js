@@ -2,7 +2,7 @@ const Users = require('./auth/model');
 
 module.exports = {
     registerReqs,
-    takenUsername,
+    takenEmail,
     restricted,
     loginReqs,
 };
@@ -12,18 +12,12 @@ module.exports = {
 function registerReqs(req, res, next) {
     let user = req.body;
 
-    if (!user.username) {
+    if (!user.email) {
         next({
             status: 409,
-            message: 'Missing Username',
+            message: 'Missing Email',
         });
     }
-    // if(!user.email){
-    // 	next({
-    // 		status: 409,
-    // 		message: 'Missing Email'
-    // 	})
-    // }
     if (!user.password) {
         next({
             status: 409,
@@ -43,12 +37,12 @@ function registerReqs(req, res, next) {
 
 //
 //Checks if the username has already been taken
-async function takenUsername(req, res, next) {
+async function takenEmail(req, res, next) {
     let user = req.body;
 
-    let username = await Users.checkUsername(user.username);
+    let username = await Users.checkEmail(user.email);
     if (username) {
-        next({ status: 401, message: 'Username is already taken' });
+        next({ status: 401, message: 'Email is already used' });
     }
     next();
 }
@@ -58,10 +52,10 @@ async function takenUsername(req, res, next) {
 function loginReqs(req, res, next) {
     let login = req.body;
 
-    if (!login.username) {
+    if (!login.email) {
         next({
             status: 409,
-            message: 'Missing username',
+            message: 'Missing Email',
         });
     }
 
@@ -71,13 +65,6 @@ function loginReqs(req, res, next) {
             message: 'Missing Password',
         });
     }
-
-    // if (!login.email) {
-    // 	next({
-    // 		status: 409,
-    // 		message: 'Missing Emai'
-    // 	})
-    // }
     next();
 }
 

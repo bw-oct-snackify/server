@@ -1,20 +1,19 @@
 const router = require('express').Router();
 const Users = require('./model');
-const { registerReqs, takenUsername, loginReqs } = require('../middleware');
+const { registerReqs, takenEmail, loginReqs } = require('../middleware');
 
 //
 //Registration
-router.post(
-    '/register',
-    registerReqs,
-    takenUsername,
-    async (req, res, next) => {
-        let user = req.body;
-        req.session.user = user;
+router.post('/register', registerReqs, takenEmail, async (req, res, next) => {
+    let user = req.body;
+    try {
         let createdUser = await Users.addUser(user);
         res.status(200).json(createdUser);
+        req.session.user = user;
+    } catch (e) {
+        console.log('Register Route: There was an error: ', e);
     }
-);
+});
 
 //
 //Login
@@ -30,7 +29,7 @@ router.post('/login', loginReqs, async (req, res, next) => {
         next({
             status: 401,
             message:
-                'You shall not pass! Unauthorized, username or password incorrect',
+                'You shall not pass! Unauthorized, Email or Password incorrect',
         });
     }
 });

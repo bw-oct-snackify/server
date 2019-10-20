@@ -2,12 +2,12 @@ exports.up = function(knex) {
     return knex.schema.createTable('companies', t => {
         t.increments('company_ID');
         t.string('company_code')
-            .notNullable()
+            .nullable()
             .comment('Server generate code to give to employees');
-        t.string('name').notNullable();
-        t.string('phone').notNullable();
-        t.string('city').notNullable();
-        t.string('state').notNullable();
+        t.string('name').nullable();
+        t.string('phone').nullable();
+        t.string('city').nullable();
+        t.string('state').nullable();
     });
 };
 
