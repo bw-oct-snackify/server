@@ -33,6 +33,13 @@ exports.seed = function(knex) {
                     img_url:
                         'https://images-na.ssl-images-amazon.com/images/I/51615qZv50L.jpg',
                 },
+                {
+                    name: 'Pepper Jack Chee',
+                    brand: 'Pepperidge Farms',
+                    uom: '30 oz box',
+                    img_url:
+                        'https://images-na.ssl-images-amazon.com/images/I/51615qZv50L.jpg',
+                },
             ]);
         });
 };

@@ -33,6 +33,7 @@ const sessionConfig = {
 //Routers
 const authRoutes = require('./endpoints/auth/routes');
 const usersRoutes = require('./endpoints/users/routes');
+const snackRoutes = require('./endpoints/snacks/routes');
 
 //
 //Create App
@@ -62,6 +63,7 @@ server.get('/', (req, res) => {
 //Use middleware
 server.use('/users', restricted, usersRoutes);
 server.use('/auth', authRoutes);
+server.use('/snacks', snackRoutes);
 
 //
 //error handler
