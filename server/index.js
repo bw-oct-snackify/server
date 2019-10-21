@@ -34,6 +34,7 @@ const sessionConfig = {
 const authRoutes = require('./endpoints/auth/routes');
 const usersRoutes = require('./endpoints/users/routes');
 const snackRoutes = require('./endpoints/snacks/routes');
+const packageRoutes = require('./endpoints/packages/routes');
 
 //
 //Create App
@@ -64,6 +65,7 @@ server.get('/', (req, res) => {
 server.use('/users', restricted, usersRoutes);
 server.use('/auth', authRoutes);
 server.use('/snacks', snackRoutes);
+server.use('/packages', packageRoutes);
 
 //
 //error handler
