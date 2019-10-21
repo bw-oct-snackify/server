@@ -29,15 +29,12 @@ module.exports = {
     },
     production: {
         client: 'pg',
-        connection: {
-            host: 'production-uri',
-            database: 'production-db',
-        },
+        connection: process.env.DATABASE_URL,
         migrations: {
-            directory: './data/migrations',
+            directory: __dirname + './data/migrations',
         },
         seeds: {
-            directory: './data/seeds',
+            directory: __dirname + './data/seeds',
         },
     },
-}[process.env.DB_ENV || 'development'];
+}[process.env.NODE_ENV || 'development'];
