@@ -14,7 +14,7 @@ router.post('/register', registerReqs, takenEmail, async (req, res, next) => {
     try {
         let [createdUser] = await Auth.addUser(user);
         res.status(200).json(createdUser);
-        req.session.user = user;
+        req.session.user = createdUser.user_ID;
     } catch (e) {
         console.log('Register Route: There was an error: ', e);
     }

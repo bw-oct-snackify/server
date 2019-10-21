@@ -3,6 +3,7 @@ const db = require('../../dbConfig');
 module.exports = {
     getUser,
     getUserID,
+    updateUser,
 };
 
 async function getUserID(user_ID) {
@@ -43,4 +44,11 @@ async function getUser(user_ID) {
         ...user,
         snacks,
     };
+}
+
+async function updateUser(user_ID, info) {
+    return db('users')
+        .returning(['user_ID', 'company_ID', 'name', 'email', 'admin'])
+        .where({ user_ID })
+        .update({ name: info.name, email: info.email });
 }
