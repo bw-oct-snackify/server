@@ -88,8 +88,17 @@ async function login(login) {
     let { email, password } = login;
     console.log('User: ', login);
     let user = await db
-        .select()
+        .select(
+            'users.name',
+            'companies.name as company_name',
+            'user_ID',
+            'admin',
+            'email',
+            'password',
+            'companies.company_ID'
+        )
         .from('users')
+        .join('companies', 'users.company_ID', 'companies.company_ID')
         .where({ email })
         .first();
 
