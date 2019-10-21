@@ -1,9 +1,11 @@
 const router = require('express').Router();
-const Users = require('../auth/model');
+const User = require('./model');
+const { validUserID } = require('./middleware');
 
-router.get('/users', async (req, res) => {
-    let users = await Users.getUsers();
-    res.status(200).json(users);
+router.get('/:id', validUserID, async (req, res) => {
+    let { id } = req.params;
+    let user = await User.getUser(id);
+    res.status(200).json(user);
 });
 
 module.exports = router;

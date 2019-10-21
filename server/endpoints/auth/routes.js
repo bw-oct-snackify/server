@@ -5,7 +5,7 @@ const {
     takenEmail,
     registerCompanyReqs,
     loginReqs,
-} = require('../middleware');
+} = require('./middleware');
 
 //
 //Registration of user

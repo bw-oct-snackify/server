@@ -1,10 +1,9 @@
-const Auth = require('./auth/model');
+const Auth = require('./model');
 
 module.exports = {
     registerReqs,
     registerCompanyReqs,
     takenEmail,
-    restricted,
     loginReqs,
 };
 
@@ -116,17 +115,4 @@ function loginReqs(req, res, next) {
         });
     }
     next();
-}
-
-//
-//Checks if the user is logged in
-async function restricted(req, res, next) {
-    if (req.session && req.session.user) {
-        next();
-    } else {
-        next({
-            status: 401,
-            message: 'Not logged in. Please do so',
-        });
-    }
 }

@@ -7,7 +7,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const session = require('express-session');
 const KnexSessionStore = require('connect-session-knex')(session);
-const { restricted } = require('./endpoints/middleware');
+const { restricted } = require('./endpoints/global');
 
 //
 //Configs
@@ -32,9 +32,9 @@ const sessionConfig = {
 //
 //Routers
 const authRoutes = require('./endpoints/auth/routes');
-const usersRoutes = require('./endpoints/users/routes');
 const snackRoutes = require('./endpoints/snacks/routes');
 const packageRoutes = require('./endpoints/packages/routes');
+const userRoutes = require('./endpoints/users/routes');
 
 //
 //Create App
@@ -62,7 +62,7 @@ server.get('/', (req, res) => {
 
 //
 //Use middleware
-server.use('/users', restricted, usersRoutes);
+server.use('/users', restricted, userRoutes);
 server.use('/auth', authRoutes);
 server.use('/snacks', snackRoutes);
 server.use('/packages', packageRoutes);
