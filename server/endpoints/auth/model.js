@@ -17,6 +17,7 @@ async function addUser(user) {
     let { name, email, password, company_code } = user;
     password = b.hashSync(password, 12);
     let company_ID;
+    let admin = false;
 
     //TODO: Check if the email is already associated with a company account
 
@@ -41,52 +42,68 @@ async function addUser(user) {
         [company_ID] = await db('companies')
             .returning('company_ID')
             .insert({});
+        admin = true;
     }
 
     console.log(company_ID);
 
     return db('users')
-        .returning('name')
+        .returning(['name', 'email', 'company_ID', 'user_ID', 'admin'])
         .insert({
             name,
             email,
             password,
             company_ID,
+            admin,
         });
 }
 
 function addCompany(company) {
-    let { name, phone, city, state } = company;
+    let { name, phone, city, state, package_ID = null } = company;
+
+    console.log(company);
+    //
+    //Create Company Code
+    let random = Math.round(Math.random() * 10000);
+    let company_code = name.toLowerCase().split(' ');
+    company_code.push('snackify');
+    company_code.push(random.toString());
+    company_code = company_code.join('-');
+
+    console.log(company_code);
+
     return db('companies')
-        .returning(['company_ID', 'name', 'phone', 'city', 'state'])
+        .returning('*')
         .insert({
             name,
+            company_code,
             phone,
             city,
             state,
+            package_ID,
         });
 }
 
-async function login(user) {
-    let { email, password } = user;
-    console.log('User: ', user);
-    let hash = await db
-        .select('user_ID', 'name', 'email', 'password')
+async function login(login) {
+    let { email, password } = login;
+    console.log('User: ', login);
+    let user = await db
+        .select()
         .from('users')
         .where({ email })
         .first();
 
     //
     //If there is not a password at all
-    console.log(hash);
-    if (!hash) {
+    console.log(user);
+    if (!user) {
         return Promise.resolve(false);
     }
 
-    let match = b.compareSync(password, hash.password);
+    let match = b.compareSync(password, user.password);
 
     if (match) {
-        return Promise.resolve(hash);
+        return Promise.resolve(user);
     }
 
     return Promise.resolve(false);
@@ -94,6 +111,13 @@ async function login(user) {
 
 function checkEmail(email) {
     return db('users')
+        .select(
+            'users.name',
+            'email',
+            'companies.name as company_name',
+            'company_code'
+        )
         .where('email', email)
+        .join('companies', 'users.company_ID', 'companies.company_ID')
         .first();
 }

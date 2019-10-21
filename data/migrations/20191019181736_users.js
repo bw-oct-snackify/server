@@ -12,6 +12,9 @@ exports.up = function(knex) {
         t.string('name').notNullable();
         t.string('email').notNullable();
         t.string('password').notNullable();
+        t.boolean('admin')
+            .defaultTo(false)
+            .notNullable();
     });
 };
 

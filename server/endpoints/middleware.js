@@ -1,4 +1,4 @@
-const Users = require('./auth/model');
+const Auth = require('./auth/model');
 
 module.exports = {
     registerReqs,
@@ -83,9 +83,16 @@ function registerCompanyReqs(req, res, next) {
 async function takenEmail(req, res, next) {
     let user = req.body;
 
-    let username = await Users.checkEmail(user.email);
+    let username = await Auth.checkEmail(user.email);
+    console.log('Taken Email: ', username);
     if (username) {
-        next({ status: 401, message: 'Email is already used' });
+        next({
+            status: 401,
+            message: {
+                message: 'Email is already taken',
+                user: username,
+            },
+        });
     }
     next();
 }

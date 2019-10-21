@@ -12,6 +12,14 @@ exports.seed = function(knex) {
                     name: 'Amanda Lane',
                     email: 'test@test.com',
                     password: b.hashSync('password', 10),
+                    admin: true,
+                },
+                {
+                    company_ID: 1,
+                    name: 'Elon Musk',
+                    email: 'elon@test.com',
+                    password: b.hashSync('password', 10),
+                    admin: false,
                 },
             ]);
         });

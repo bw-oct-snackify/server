@@ -9,10 +9,10 @@ const {
 
 //
 //Registration of user
-router.post('/register', registerReqs, async (req, res, next) => {
+router.post('/register', registerReqs, takenEmail, async (req, res, next) => {
     let user = req.body;
     try {
-        let createdUser = await Auth.addUser(user);
+        let [createdUser] = await Auth.addUser(user);
         res.status(200).json(createdUser);
         req.session.user = user;
     } catch (e) {
@@ -44,13 +44,16 @@ router.post(
 //
 //Login
 router.post('/login', loginReqs, async (req, res, next) => {
-    let user = req.body; //
+    let login = req.body; //
+    console.log(login);
+
+    let user = await Auth.login(login);
     console.log(user);
-    let loggedIn = await Auth.login(user);
-    console.log(loggedIn);
-    if (loggedIn) {
-        req.session.user = loggedIn.user_ID;
-        res.status(200).json({ message: 'Youre logged in' });
+
+    if (user && user.email) {
+        delete user.password;
+        req.session.user = user.user_ID;
+        res.status(200).json(user);
     } else {
         next({
             status: 401,
