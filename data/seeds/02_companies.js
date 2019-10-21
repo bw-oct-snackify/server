@@ -7,6 +7,7 @@ exports.seed = function(knex) {
             return knex('companies').insert([
                 {
                     company_code: 'lambda-school-snackify-123',
+                    package_ID: 1,
                     name: 'Lambda School',
                     phone: '123-456-7890',
                     city: 'Salt Lake',

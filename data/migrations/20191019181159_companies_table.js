@@ -8,6 +8,12 @@ exports.up = function(knex) {
         t.string('phone').nullable();
         t.string('city').nullable();
         t.string('state').nullable();
+        t.integer('package_ID')
+            .unsigned()
+            .defaultTo(1);
+        t.foreign('package_ID')
+            .references('package_ID')
+            .inTable('packages');
     });
 };
 

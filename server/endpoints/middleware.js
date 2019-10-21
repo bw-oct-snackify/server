@@ -2,6 +2,7 @@ const Users = require('./auth/model');
 
 module.exports = {
     registerReqs,
+    registerCompanyReqs,
     takenEmail,
     restricted,
     loginReqs,
@@ -11,6 +12,13 @@ module.exports = {
 //Registration Requirements
 function registerReqs(req, res, next) {
     let user = req.body;
+
+    if (!user.name) {
+        next({
+            status: 409,
+            message: 'Missing Name',
+        });
+    }
 
     if (!user.email) {
         next({
@@ -29,6 +37,41 @@ function registerReqs(req, res, next) {
         next({
             status: 409,
             message: 'Password must be at least 8 chars',
+        });
+    }
+
+    next();
+}
+
+//
+//Register Company Reqs
+function registerCompanyReqs(req, res, next) {
+    let company = req.body;
+    if (!company.name) {
+        next({
+            status: 409,
+            message: 'Missing company name',
+        });
+    }
+
+    if (!company.phone) {
+        next({
+            status: 409,
+            message: 'Missing company phone',
+        });
+    }
+
+    if (!company.city) {
+        next({
+            status: 409,
+            message: 'Missing city',
+        });
+    }
+
+    if (!company.state) {
+        next({
+            status: 409,
+            message: 'Missing State',
         });
     }
 

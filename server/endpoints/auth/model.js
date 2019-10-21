@@ -1,12 +1,10 @@
-const knex = require('knex');
-const config = require('../../../knexfile');
 const b = require('bcryptjs');
-
-const db = knex(config);
+const db = require('../../dbConfig');
 
 module.exports = {
     getUsers,
     addUser,
+    addCompany,
     checkEmail,
     login,
 };
@@ -41,31 +39,45 @@ async function addUser(user) {
     //If there is no company_code provided, create a new one
     if (!company_ID) {
         [company_ID] = await db('companies')
-            .insert({})
-            .returning('company_ID');
+            .returning('company_ID')
+            .insert({});
     }
 
     console.log(company_ID);
 
     return db('users')
+        .returning('name')
         .insert({
             name,
             email,
             password,
             company_ID,
-        })
-        .returning('name');
+        });
+}
+
+function addCompany(company) {
+    let { name, phone, city, state } = company;
+    return db('companies')
+        .returning(['company_ID', 'name', 'phone', 'city', 'state'])
+        .insert({
+            name,
+            phone,
+            city,
+            state,
+        });
 }
 
 async function login(user) {
     let { email, password } = user;
     console.log('User: ', user);
     let hash = await db
-        .select('password')
+        .select('user_ID', 'name', 'email', 'password')
         .from('users')
         .where({ email })
         .first();
 
+    //
+    //If there is not a password at all
     console.log(hash);
     if (!hash) {
         return Promise.resolve(false);
@@ -74,7 +86,7 @@ async function login(user) {
     let match = b.compareSync(password, hash.password);
 
     if (match) {
-        return Promise.resolve(true);
+        return Promise.resolve(hash);
     }
 
     return Promise.resolve(false);

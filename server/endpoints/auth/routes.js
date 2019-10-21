@@ -1,13 +1,18 @@
 const router = require('express').Router();
-const Users = require('./model');
-const { registerReqs, takenEmail, loginReqs } = require('../middleware');
+const Auth = require('./model');
+const {
+    registerReqs,
+    takenEmail,
+    registerCompanyReqs,
+    loginReqs,
+} = require('../middleware');
 
 //
-//Registration
+//Registration of user
 router.post('/register', registerReqs, async (req, res, next) => {
     let user = req.body;
     try {
-        let createdUser = await Users.addUser(user);
+        let createdUser = await Auth.addUser(user);
         res.status(200).json(createdUser);
         req.session.user = user;
     } catch (e) {
@@ -16,14 +21,35 @@ router.post('/register', registerReqs, async (req, res, next) => {
 });
 
 //
+//Registration of a new company
+router.post(
+    '/register/company',
+    registerCompanyReqs,
+    async (req, res, next) => {
+        let company = req.body;
+        try {
+            let [createdCompany] = await Auth.addCompany(company);
+            if (createdCompany) {
+                res.status(200).json(createdCompany);
+            }
+        } catch (e) {
+            next({
+                status: 500,
+                message: `Server error`,
+            });
+        }
+    }
+);
+
+//
 //Login
 router.post('/login', loginReqs, async (req, res, next) => {
     let user = req.body; //
     console.log(user);
-    let loggedIn = await Users.login(user);
+    let loggedIn = await Auth.login(user);
     console.log(loggedIn);
     if (loggedIn) {
-        req.session.user = user;
+        req.session.user = loggedIn.user_ID;
         res.status(200).json({ message: 'Youre logged in' });
     } else {
         next({

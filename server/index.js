@@ -1,5 +1,4 @@
 const express = require('express');
-const knex = require('knex');
 
 //
 //middleware
@@ -12,7 +11,7 @@ const { restricted } = require('./endpoints/middleware');
 
 //
 //Configs
-const knexConfig = knex(require('../knexfile'));
+const knexConfig = require('./dbConfig');
 const sessionConfig = {
     name: 'session',
     secret: process.env.SESSION_SECRET || 'LaMbDaIsDaBoMb',
