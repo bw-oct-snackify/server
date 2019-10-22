@@ -148,4 +148,19 @@ router.get('/suggestions', validCompanyID, async (req, res, next) => {
     }
 });
 
+//
+//Get companies users
+router.get('/users', validCompanyID, async (req, res, next) => {
+    let company_id = req.company_id;
+    try {
+        let users = await Company.getUsers(company_id);
+        res.status(200).json(users);
+    } catch (e) {
+        next({
+            status: 500,
+            message: e,
+        });
+    }
+});
+
 module.exports = router;

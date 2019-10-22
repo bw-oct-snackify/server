@@ -27,7 +27,7 @@ async function validUserID(req, res, next) {
 //Checks to ensure the request is only for the user that is currently logged in
 async function onlyUserAction(req, res, next) {
     let { user_id } = req.params;
-    if (req.session.user == user_id) {
+    if (req.session.user.user_ID == user_id) {
         next();
     } else {
         next({

@@ -1,5 +1,6 @@
 module.exports = {
     mapUsersToSnacks,
+    mapSnacksToUsers,
 };
 
 function mapUsersToSnacks(snacks, user_snack) {
@@ -20,4 +21,13 @@ function mapUsersToSnacks(snacks, user_snack) {
     });
 
     return snacks;
+}
+
+function mapSnacksToUsers(users, snacks) {
+    users = user.map(user => {
+        let sugggested = [];
+        snacks.forEach(snack => {
+            // if(snack.snack_ID = )
+        });
+    });
 }
