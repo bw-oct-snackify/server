@@ -35,6 +35,7 @@ const authRoutes = require('./endpoints/auth/routes');
 const snackRoutes = require('./endpoints/snacks/routes');
 const packageRoutes = require('./endpoints/packages/routes');
 const userRoutes = require('./endpoints/users/routes');
+const companyRoutes = require('./endpoints/company/routes');
 
 //
 //Create App
@@ -66,6 +67,7 @@ server.use('/users', restricted, userRoutes);
 server.use('/auth', authRoutes);
 server.use('/snacks', snackRoutes);
 server.use('/packages', packageRoutes);
+server.use('/company', restricted, companyRoutes);
 
 //
 //error handler
