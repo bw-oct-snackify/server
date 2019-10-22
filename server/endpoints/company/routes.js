@@ -1,9 +1,10 @@
 const router = require('express').Router();
 const Company = require('./model');
-const { validCompanyID, onlyAdminAction } = require('./middleware');
+const { validCompanyID } = require('./middleware');
 
-router.get('/:company_id', onlyAdminAction, async (req, res, next) => {
-    let { company_id } = req.params;
+router.get('/', async (req, res, next) => {
+    let company_id = req.company_id;
+
     try {
         let company_info = await Company.getCompanyInfo(company_id);
         res.status(200).json(company_info);
