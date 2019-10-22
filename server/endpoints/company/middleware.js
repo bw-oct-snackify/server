@@ -2,6 +2,7 @@ const Company = require('./model');
 module.exports = {
     validCompanyID,
     updateCompanyReqs,
+    checkIfCompanySnackExists,
 };
 
 async function validCompanyID(req, res, next) {
@@ -56,4 +57,23 @@ function updateCompanyReqs(req, res, next) {
     }
 
     next();
+}
+
+async function checkIfCompanySnackExists(req, res, next) {
+    let { snack_id } = req.params;
+    let company_id = req.company_id;
+    try {
+        let company_snack = await Company.validSnackRequest(
+            company_id,
+            snack_id
+        );
+        if (company_snack) {
+            next();
+        }
+    } catch (error) {
+        next({
+            status: 404,
+            message: "Your company doens't have that snack associated",
+        });
+    }
 }
