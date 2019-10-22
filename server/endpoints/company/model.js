@@ -40,7 +40,7 @@ async function getSnacks(company_ID) {
         .where({ company_ID })
         .first();
     let snacks = await db
-        .select('s.name', 's.brand', 's.uom', 's.img_url')
+        .select('s.name', 's.brand', 's.uom', 's.img_url', 'cs.quantity')
         .from('snacks as s')
         .join('company_snacks as cs', 'cs.snack_ID', 's.snack_ID')
         .where('cs.company_ID', company_ID);
