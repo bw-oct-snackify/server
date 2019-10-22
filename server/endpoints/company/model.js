@@ -1,4 +1,5 @@
 const db = require('../../dbConfig');
+const { mapUsersToSnacks } = require('./utils');
 
 module.exports = {
     getCompanyInfo,
@@ -114,24 +115,27 @@ function deleteSnack(company_ID, snack_ID) {
 //
 //Get Suggested Snacks
 async function getSuggestions(company_ID) {
-    let company = await db
-        .select('name')
+    let [company] = await db
+        .select('name as company_name')
         .from('companies')
         .where({ company_ID });
     let snacks = await db
-        .select('*')
-        .from('company_snacks')
+        .select('s.*', 'cs.quantity')
+        .from('company_snacks as cs')
+        .join('snacks as s', 's.snack_ID', 'cs.snack_ID')
         .where({ company_ID });
     let userSuggestions = await db
-        .select('u.name', 's.name', 's.snack_ID')
-        .from('users as u')
-        .join('user_snacks as us', 'us.user_ID', 'u.user_ID')
+        .select('u.name', 's.snack_ID')
+        .from('user_snacks as us')
+        .join('users as u', 'u.user_ID', 'us.user_ID')
         .join('snacks as s', 's.snack_ID', 'us.snack_ID')
         .where('u.company_ID', company_ID);
 
+    console.log(userSuggestions);
+    let updatedSnacks = mapUsersToSnacks(snacks, userSuggestions);
+
     return {
-        company,
-        snacks,
-        userSuggestions,
+        ...company,
+        updatedSnacks,
     };
 }
