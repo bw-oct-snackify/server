@@ -9,10 +9,10 @@ const {
 
 //
 //Get User Info
-router.get('/:id', validUserID, async (req, res, next) => {
+router.get('/:user_id', onlyUserAction, validUserID, async (req, res, next) => {
     try {
-        let { id } = req.params;
-        let user = await User.getUser(id);
+        let { user_id } = req.params;
+        let user = await User.getUser(user_id);
         res.status(200).json(user);
     } catch (e) {
         next({
@@ -25,15 +25,15 @@ router.get('/:id', validUserID, async (req, res, next) => {
 //
 //Update User info based on user_ID
 router.put(
-    '/:id',
+    '/:user_id',
     validUserID,
     onlyUserAction,
     userReqs,
     async (req, res, next) => {
-        let { id } = req.params;
+        let { user_id } = req.params;
         let info = req.body;
         try {
-            let [updated] = await User.updateUser(id, info);
+            let [updated] = await User.updateUser(user_id, info);
             res.status(200).json(updated);
         } catch (e) {
             next({
@@ -51,17 +51,28 @@ router.post(
     validUserID,
     validSnackID,
     async (req, res, next) => {
+        console.log(req.params);
         let { user_id, snack_id } = req.params;
+
         try {
-            let snack = await User.addSnack(user_id, snack_id);
+            let [snack] = await User.addSnack(user_id, snack_id);
             res.status(200).json(snack);
         } catch (e) {
             next({
                 status: 500,
-                message: 'Server failed to add snack... so sorry :/ ',
+                message: 'Already added that snack... so sorry :/ ',
             });
         }
     }
+);
+
+//
+//DELETE user_snack association
+router.delete(
+    '/:user_id/snacks/:snack_id',
+    validUserID,
+    validSnackID,
+    async (req, res, next) => {}
 );
 
 module.exports = router;

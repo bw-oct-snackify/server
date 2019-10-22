@@ -10,8 +10,8 @@ module.exports = {
 //
 //Checks if the
 async function validUserID(req, res, next) {
-    let { id } = req.params;
-    let userID = await User.getUserID(id);
+    let { user_id } = req.params;
+    let userID = await User.getUserID(user_id);
     console.log(userID);
     if (userID) {
         next();
@@ -26,14 +26,14 @@ async function validUserID(req, res, next) {
 //
 //Checks to ensure the request is only for the user that is currently logged in
 async function onlyUserAction(req, res, next) {
-    let { id } = req.params;
-    if (req.session.user == id) {
+    let { user_id } = req.params;
+    if (req.session.user == user_id) {
         next();
     } else {
         next({
             status: 403,
             message:
-                "You're trying to alter a user that is not you. Naughty naughty",
+                "You're trying to get / alter a user that is not you. Naughty. Naughty.",
         });
     }
 }
@@ -63,8 +63,8 @@ function userReqs(req, res, next) {
 //
 //Checks to make sure the snack exists
 async function validSnackID(req, res, next) {
-    let { snack_ID } = req.params;
-    let snack = await User.getSnackID(snack_ID);
+    let { snack_id } = req.params;
+    let snack = await User.getSnackID(snack_id);
     if (snack) {
         next();
     } else {

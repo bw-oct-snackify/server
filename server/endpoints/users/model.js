@@ -80,9 +80,18 @@ async function updateUser(user_ID, info) {
 
 //
 //Add a snack association to the user
-function addSnack(user_ID, snack_ID) {
-    return db('user_snacks').insert({
-        user_ID,
-        snack_ID,
-    });
+async function addSnack(user_ID, snack_ID) {
+    let record = await db('user_snacks')
+        .where({ user_ID })
+        .andWhere({ snack_ID });
+    if (record) {
+        Promise();
+    }
+    return db('user_snacks')
+        .returning('*')
+        .insert({
+            user_ID,
+            snack_ID,
+        })
+        .whereNotExists(db('user_snacks').where({ user_ID, snack_ID }));
 }

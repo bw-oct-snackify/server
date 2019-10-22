@@ -5,6 +5,7 @@ const {
     takenEmail,
     registerCompanyReqs,
     loginReqs,
+    validCompanyID,
 } = require('./middleware');
 
 //
@@ -22,13 +23,15 @@ router.post('/register', registerReqs, takenEmail, async (req, res, next) => {
 
 //
 //Registration of a new company
-router.post(
-    '/register/company',
+router.put(
+    '/register/company/:id',
     registerCompanyReqs,
+    validCompanyID,
     async (req, res, next) => {
+        let { id } = req.params;
         let company = req.body;
         try {
-            let [createdCompany] = await Auth.addCompany(company);
+            let [createdCompany] = await Auth.addCompany(id, company);
             if (createdCompany) {
                 res.status(200).json(createdCompany);
             }

@@ -6,6 +6,7 @@ module.exports = {
     addUser,
     addCompany,
     checkEmail,
+    checkCompany,
     login,
 };
 
@@ -58,7 +59,9 @@ async function addUser(user) {
         });
 }
 
-function addCompany(company) {
+//
+//create a new company
+function addCompany(company_ID, company) {
     let { name, phone, city, state, package_ID = null } = company;
 
     console.log(company);
@@ -74,14 +77,15 @@ function addCompany(company) {
 
     return db('companies')
         .returning('*')
-        .insert({
+        .update({
             name,
             company_code,
             phone,
             city,
             state,
             package_ID,
-        });
+        })
+        .where({ company_ID });
 }
 
 async function login(login) {
@@ -128,5 +132,11 @@ function checkEmail(email) {
         )
         .where('email', email)
         .join('companies', 'users.company_ID', 'companies.company_ID')
+        .first();
+}
+
+function checkCompany(company_ID) {
+    return db('companies')
+        .where({ company_ID })
         .first();
 }

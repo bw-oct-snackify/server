@@ -5,6 +5,7 @@ module.exports = {
     registerCompanyReqs,
     takenEmail,
     loginReqs,
+    validCompanyID,
 };
 
 //
@@ -46,6 +47,7 @@ function registerReqs(req, res, next) {
 //Register Company Reqs
 function registerCompanyReqs(req, res, next) {
     let company = req.body;
+
     if (!company.name) {
         next({
             status: 409,
@@ -75,6 +77,21 @@ function registerCompanyReqs(req, res, next) {
     }
 
     next();
+}
+
+//
+//Checks if the company exists
+async function validCompanyID(req, res, next) {
+    let { id } = req.params;
+    let company_ID = await Auth.checkCompany(id);
+    if (company_ID) {
+        next();
+    } else {
+        next({
+            status: 404,
+            message: 'No company with that ID exists',
+        });
+    }
 }
 
 //
@@ -116,3 +133,6 @@ function loginReqs(req, res, next) {
     }
     next();
 }
+
+//
+//TODO: Checks if the user is the admin and can update the company info
