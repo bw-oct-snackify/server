@@ -3,9 +3,13 @@ const db = require('../../dbConfig');
 module.exports = {
     getUser,
     getUserID,
+    getSnackID,
     updateUser,
+    addSnack,
 };
 
+//
+//Get and return the userID
 async function getUserID(user_ID) {
     let user = await db
         .select('user_ID')
@@ -20,6 +24,17 @@ async function getUserID(user_ID) {
     }
 }
 
+//
+//Get and return the snack with a snack ID
+async function getSnackID(snack_ID) {
+    let snack = await db('snacks')
+        .where({ snack_ID })
+        .first();
+    return snack;
+}
+
+//
+//Get and return the user based on user ID
 async function getUser(user_ID) {
     let user = await db
         .select(
@@ -46,9 +61,28 @@ async function getUser(user_ID) {
     };
 }
 
+//
+//Update the user
 async function updateUser(user_ID, info) {
+    let { name, email, img_url = null } = info;
     return db('users')
-        .returning(['user_ID', 'company_ID', 'name', 'email', 'admin'])
+        .returning([
+            'user_ID',
+            'company_ID',
+            'name',
+            'email',
+            'admin',
+            'img_url',
+        ])
         .where({ user_ID })
-        .update({ name: info.name, email: info.email });
+        .update({ name, email, img_url });
+}
+
+//
+//Add a snack association to the user
+function addSnack(user_ID, snack_ID) {
+    return db('user_snacks').insert({
+        user_ID,
+        snack_ID,
+    });
 }

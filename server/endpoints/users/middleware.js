@@ -4,6 +4,7 @@ module.exports = {
     validUserID,
     onlyUserAction,
     userReqs,
+    validSnackID,
 };
 
 //
@@ -22,6 +23,8 @@ async function validUserID(req, res, next) {
     }
 }
 
+//
+//Checks to ensure the request is only for the user that is currently logged in
 async function onlyUserAction(req, res, next) {
     let { id } = req.params;
     if (req.session.user == id) {
@@ -35,6 +38,8 @@ async function onlyUserAction(req, res, next) {
     }
 }
 
+//
+//Checks for user put requirements to update user info
 function userReqs(req, res, next) {
     let user = req.body;
 
@@ -53,4 +58,19 @@ function userReqs(req, res, next) {
     }
 
     next();
+}
+
+//
+//Checks to make sure the snack exists
+async function validSnackID(req, res, next) {
+    let { snack_ID } = req.params;
+    let snack = await User.getSnackID(snack_ID);
+    if (snack) {
+        next();
+    } else {
+        next({
+            status: 404,
+            message: 'No snack with that ID exists',
+        });
+    }
 }
