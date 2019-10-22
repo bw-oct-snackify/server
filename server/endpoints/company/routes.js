@@ -107,6 +107,8 @@ router.put(
     }
 );
 
+console.log('hello');
+
 //
 //Delete Company Snack
 router.delete(
