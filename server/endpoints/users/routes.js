@@ -72,7 +72,23 @@ router.delete(
     '/:user_id/snacks/:snack_id',
     validUserID,
     validSnackID,
-    async (req, res, next) => {}
+    async (req, res, next) => {
+        let { user_id, snack_id } = req.params;
+        try {
+            let snack = await User.deleteSnack(user_id, snack_id);
+            if (snack) {
+                res.status(200).json({
+                    status: true,
+                    message: `Succesfully deleted snack: ${snack_id} from user: ${user_id}`,
+                });
+            }
+        } catch (error) {
+            next({
+                status: 500,
+                message: 'Server error on deleting snack... try again',
+            });
+        }
+    }
 );
 
 module.exports = router;

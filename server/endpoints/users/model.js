@@ -6,6 +6,7 @@ module.exports = {
     getSnackID,
     updateUser,
     addSnack,
+    deleteSnack,
 };
 
 //
@@ -81,17 +82,35 @@ async function updateUser(user_ID, info) {
 //
 //Add a snack association to the user
 async function addSnack(user_ID, snack_ID) {
-    let record = await db('user_snacks')
-        .where({ user_ID })
-        .andWhere({ snack_ID });
-    if (record) {
-        Promise();
+    //
+    //Check if the user has already added the snack
+    let record = await db('user_snacks').where({ user_ID, snack_ID });
+    console.log('record: ', record);
+    //
+    //If the record exists, just let them know
+    if (record && record.length) {
+        return Promise.resolve([
+            {
+                status: 200,
+                message: 'Already saved snack',
+            },
+        ]);
+    } else {
+        //
+        //Else create it
+        return db('user_snacks')
+            .returning('*')
+            .insert({
+                user_ID,
+                snack_ID,
+            });
     }
+}
+
+//
+//Remove user-snack association
+function deleteSnack(user_ID, snack_ID) {
     return db('user_snacks')
-        .returning('*')
-        .insert({
-            user_ID,
-            snack_ID,
-        })
-        .whereNotExists(db('user_snacks').where({ user_ID, snack_ID }));
+        .where({ user_ID, snack_ID })
+        .delete();
 }
