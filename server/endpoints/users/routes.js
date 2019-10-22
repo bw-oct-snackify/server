@@ -50,6 +50,7 @@ router.post(
     '/:user_id/snacks/:snack_id',
     validUserID,
     validSnackID,
+    onlyUserAction,
     async (req, res, next) => {
         console.log(req.params);
         let { user_id, snack_id } = req.params;
@@ -72,20 +73,44 @@ router.delete(
     '/:user_id/snacks/:snack_id',
     validUserID,
     validSnackID,
+    onlyUserAction,
     async (req, res, next) => {
         let { user_id, snack_id } = req.params;
         try {
             let snack = await User.deleteSnack(user_id, snack_id);
-            if (snack) {
+            res.status(200).json({
+                status: true,
+                message: `Succesfully deleted snack: ${snack_id} from user: ${user_id}`,
+            });
+        } catch (error) {
+            next({
+                status: 500,
+                message: 'Server error on deleting snack... try again',
+            });
+        }
+    }
+);
+
+//
+//Delete User
+router.delete(
+    '/:user_id',
+    validUserID,
+    onlyUserAction,
+    async (req, res, next) => {
+        let { user_id } = req.params;
+        try {
+            let user = await User.deleteUser(user_id);
+            if (user) {
                 res.status(200).json({
                     status: true,
-                    message: `Succesfully deleted snack: ${snack_id} from user: ${user_id}`,
+                    message: `Succesfully deleted user: ${user_id}`,
                 });
             }
         } catch (error) {
             next({
                 status: 500,
-                message: 'Server error on deleting snack... try again',
+                message: 'Server error on deleting user... try again',
             });
         }
     }

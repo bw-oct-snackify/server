@@ -7,6 +7,7 @@ module.exports = {
     updateUser,
     addSnack,
     deleteSnack,
+    deleteUser,
 };
 
 //
@@ -112,5 +113,13 @@ async function addSnack(user_ID, snack_ID) {
 function deleteSnack(user_ID, snack_ID) {
     return db('user_snacks')
         .where({ user_ID, snack_ID })
+        .delete();
+}
+
+//
+//Delete User
+function deleteUser(user_ID) {
+    return db('users')
+        .where({ user_ID })
         .delete();
 }
