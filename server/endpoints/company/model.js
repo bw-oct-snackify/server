@@ -144,21 +144,22 @@ async function getSuggestions(company_ID) {
 //
 //Get company users
 async function getUsers(company_ID) {
+    let [company] = await db
+        .select('name as company_name')
+        .from('companies')
+        .where({ company_ID });
     let users = await db
         .select('name', 'email', 'user_ID', 'admin')
         .from('users')
         .where({ company_ID });
     let snacks = await db
-        .select('s.*', 'u.name', 'u.email', 'u.user_ID', 'u.admin')
+        .select('s.*', 'u.name as user_name', 'u.email', 'u.user_ID', 'u.admin')
         .from('snacks as s')
         .join('user_snacks as us', 'us.snack_ID', 's.snack_ID')
         .join('users as u', 'u.user_ID', 'us.user_ID')
         .where('u.company_ID', company_ID);
 
-    //let updatedUsers = mapSnacksToUsers(users, snacks);
+    let updatedUsers = mapSnacksToUsers(users, snacks);
 
-    return {
-        users,
-        snacks,
-    };
+    return { ...company, users: updatedUsers };
 }

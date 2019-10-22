@@ -24,10 +24,18 @@ function mapUsersToSnacks(snacks, user_snack) {
 }
 
 function mapSnacksToUsers(users, snacks) {
-    users = user.map(user => {
-        let sugggested = [];
+    users = users.map(user => {
+        let user_snacks = [];
         snacks.forEach(snack => {
-            // if(snack.snack_ID = )
+            if (user.user_ID == snack.user_ID) {
+                user_snacks.push(snack.name);
+            }
         });
+        return {
+            ...user,
+            user_snacks,
+        };
     });
+
+    return users;
 }
