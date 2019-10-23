@@ -1,6 +1,8 @@
 const b = require('bcryptjs');
 const db = require('../../dbConfig');
 
+let User = require('../users/model');
+
 module.exports = {
     getUsers,
     addUser,
@@ -91,31 +93,21 @@ function addCompany(company_ID, company) {
 async function login(login) {
     let { email, password } = login;
     console.log('User: ', login);
-    let user = await db
-        .select(
-            'users.name',
-            'companies.name as company_name',
-            'user_ID',
-            'admin',
-            'email',
-            'password',
-            'companies.company_ID'
-        )
+    let check = await db
+        .select('user_ID', 'email', 'password')
         .from('users')
         .join('companies', 'users.company_ID', 'companies.company_ID')
         .where({ email })
         .first();
 
-    //
-    //If there is not a password at all
-    console.log(user);
-    if (!user) {
+    if (!check) {
         return Promise.resolve(false);
     }
 
-    let match = b.compareSync(password, user.password);
+    let match = b.compareSync(password, check.password);
 
     if (match) {
+        let user = await User.getUser(check.user_ID);
         return Promise.resolve(user);
     }
 

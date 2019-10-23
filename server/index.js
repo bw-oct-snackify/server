@@ -25,7 +25,7 @@ const sessionConfig = {
     store: new KnexSessionStore({
         knex: knexConfig,
         createtable: true,
-        clearInterval: 1000 * 60 * 60 * 24 * 30,
+        clearInterval: 1000 * 60 * 60 * 24,
     }),
 };
 
@@ -49,7 +49,7 @@ server.use(helmet());
 server.use(
     cors({
         credentials: true,
-        origin: 'http://localhost:3000',
+        origin: ['http://localhost:3000', 'https://snackify.netlify.com/'],
     })
 );
 server.use(morgan('tiny'));
