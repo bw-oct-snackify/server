@@ -54,11 +54,11 @@ var whitelist = [
 var corsOptions = {
     credentials: true,
     origin: function(origin, callback) {
-        if (whitelist.indexOf(origin) !== -1 || !origin) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
+        if (!origin) return callback(null, true);
+        if (whitelist.indexOf(origin) === -1) {
+            return callback(new Error('Not allowed by CORS'));
         }
+        return callback(null, true);
     },
 };
 server.use(cors(corsOptions));
