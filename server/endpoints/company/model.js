@@ -15,9 +15,11 @@ module.exports = {
 };
 
 function getCompanyInfo(company_ID) {
-    return db('companies')
-        .where({ company_ID })
-        .join('packages', 'packages.package_ID', 'companies.package_ID')
+    return db
+        .select('c.*', 'p.price')
+        .from('companies as c')
+        .where({ 'c.company_ID': company_ID })
+        .join('packages as p', 'p.package_ID', 'c.package_ID')
         .first();
 }
 

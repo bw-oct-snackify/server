@@ -8,6 +8,7 @@ module.exports = {
 async function validCompanyID(req, res, next) {
     let company_id = req.company_id;
     let company = await Company.getCompanyInfo(company_id);
+    console.log(company);
     if (company) {
         next();
     } else {

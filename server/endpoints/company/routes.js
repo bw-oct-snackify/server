@@ -11,7 +11,7 @@ const { validSnackID } = require('../users/middleware');
 
 //
 //Get company info
-router.get('/', async (req, res, next) => {
+router.get('/', validCompanyID, async (req, res, next) => {
     let company_id = req.company_id;
 
     try {
