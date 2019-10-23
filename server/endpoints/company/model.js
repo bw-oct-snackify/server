@@ -17,6 +17,7 @@ module.exports = {
 function getCompanyInfo(company_ID) {
     return db('companies')
         .where({ company_ID })
+        .join('packages', 'packages.package_ID', 'companies.package_ID')
         .first();
 }
 

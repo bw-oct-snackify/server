@@ -82,6 +82,7 @@ function addCompany(company_ID, company) {
     //Create Company Code
     let random = Math.round(Math.random() * 10000);
     let company_code = name.toLowerCase().split(' ');
+    console.log(company_code);
     company_code.push('snackify');
     company_code.push(random.toString());
     company_code = company_code.join('-');
