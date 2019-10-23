@@ -57,6 +57,13 @@ function userReqs(req, res, next) {
         });
     }
 
+    if (!user.img_url) {
+        next({
+            status: 409,
+            message: 'Missing Image',
+        });
+    }
+
     next();
 }
 

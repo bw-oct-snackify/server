@@ -3,9 +3,34 @@ const Snacks = require('./model');
 const { restricted } = require('../global');
 
 router.get('/', async (req, res, next) => {
+    let page = parseInt(req.query.page) || 1;
+    let limit = parseInt(req.query.limit) || 20;
+    console.log(page);
+    console.log(limit);
     try {
-        let snacks = await Snacks.getSnacks();
-        res.status(200).json(snacks);
+        const startIndex = (page - 1) * limit;
+        const endIndex = startIndex + limit;
+
+        let snacks = await Snacks.getSnacks(startIndex, limit);
+
+        //Paginate results
+        results = {};
+
+        if (endIndex < (await Snacks.getSnackCount())) {
+            results.next = {
+                page: page + 1,
+                limit: limit,
+            };
+        }
+        if (startIndex > 0) {
+            results.previous = {
+                page: page - 1,
+                limit: limit,
+            };
+        }
+        results.snacks = snacks;
+
+        res.status(200).json(results);
     } catch (e) {
         next({
             status: 500,

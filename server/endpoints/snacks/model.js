@@ -3,10 +3,20 @@ const db = require('../../dbConfig');
 module.exports = {
     getSnacks,
     addSnacks,
+    getSnackCount,
 };
 
-function getSnacks() {
-    return db('snacks');
+async function getSnackCount() {
+    let [count] = await db('snacks').count('snack_ID');
+    count = parseInt(count.count);
+    console.log(count);
+    return count;
+}
+
+function getSnacks(page, limit) {
+    return db('snacks')
+        .limit(limit)
+        .offset(page);
 }
 
 async function addSnacks(snacks) {
