@@ -5,6 +5,8 @@ const {
     updateCompanyReqs,
     checkIfCompanySnackExists,
 } = require('./middleware');
+const { validUserID } = require('../users/middleware');
+
 const { validSnackID } = require('../users/middleware');
 
 //
@@ -155,6 +157,23 @@ router.get('/users', validCompanyID, async (req, res, next) => {
     try {
         let users = await Company.getUsers(company_id);
         res.status(200).json(users);
+    } catch (e) {
+        next({
+            status: 500,
+            message: e,
+        });
+    }
+});
+
+//Delete company user
+router.delete('/users/:user_id', validUserID, async (req, res, next) => {
+    let { user_id } = req.params;
+    try {
+        await Company.deleteUser(user_id);
+        res.status(200).json({
+            status: true,
+            message: `Successfully deleted user ${user_id}`,
+        });
     } catch (e) {
         next({
             status: 500,

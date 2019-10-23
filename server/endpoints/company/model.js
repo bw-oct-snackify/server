@@ -11,6 +11,7 @@ module.exports = {
     deleteSnack,
     getSuggestions,
     getUsers,
+    deleteUser,
 };
 
 function getCompanyInfo(company_ID) {
@@ -162,4 +163,12 @@ async function getUsers(company_ID) {
     let updatedUsers = mapSnacksToUsers(users, snacks);
 
     return { ...company, users: updatedUsers };
+}
+
+//
+//Delete a user
+async function deleteUser(user_ID) {
+    return db('users')
+        .where({ user_ID })
+        .del();
 }

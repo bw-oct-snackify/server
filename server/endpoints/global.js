@@ -18,7 +18,7 @@ async function restricted(req, res, next) {
 
 async function onlyAdminAction(req, res, next) {
     let { company_id } = req.params;
-
+    console.log(req.session.user);
     if (
         req.session.user.company_ID == company_id &&
         req.session.user.admin == true

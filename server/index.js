@@ -46,11 +46,11 @@ const server = express();
 server.use(express.json());
 server.use(helmet());
 //TODO: Add multiple acceptable origins
-var whitelist = ['http://localhost:3000', 'https://snackify.netlify.com'];
+var whitelist = ['http://localhost:3000', 'http://snackify.netlify.com'];
 var corsOptions = {
     credentials: true,
     origin: function(origin, callback) {
-        if (whitelist.indexOf(origin) !== -1) {
+        if (whitelist.indexOf(origin) !== -1 || !origin) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
