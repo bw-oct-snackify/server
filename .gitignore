@@ -1,3 +1,5 @@
 node_modules
 .env
 .DS_Store
+heroku keys:add
+heroku keys:add.pub

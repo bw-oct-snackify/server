@@ -25,7 +25,7 @@ const sessionConfig = {
     store: new KnexSessionStore({
         knex: knexConfig,
         createtable: true,
-        clearInterval: 1000 * 60 * 60,
+        clearInterval: 1000 * 60 * 60 * 24 * 30,
     }),
 };
 
