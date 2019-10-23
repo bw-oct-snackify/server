@@ -49,7 +49,7 @@ server.use(helmet());
 var whitelist = [
     'http://localhost:3000',
     'http://localhost:5000',
-    'http://snackify.netlify.com',
+    'https://snackify.netlify.com',
 ];
 var corsOptions = {
     credentials: true,
