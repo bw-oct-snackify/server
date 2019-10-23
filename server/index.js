@@ -46,12 +46,18 @@ const server = express();
 server.use(express.json());
 server.use(helmet());
 //TODO: Add multiple acceptable origins
-server.use(
-    cors({
-        credentials: true,
-        origin: ['http://localhost:3000', 'https://snackify.netlify.com/'],
-    })
-);
+var whitelist = ['http://localhost:3000', 'https://snackify.netlify.com'];
+var corsOptions = {
+    credentials: true,
+    origin: function(origin, callback) {
+        if (whitelist.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+};
+server.use(cors(corsOptions));
 server.use(morgan('tiny'));
 server.use(session(sessionConfig));
 
