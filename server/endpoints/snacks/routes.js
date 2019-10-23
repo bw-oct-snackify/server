@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const Snacks = require('./model');
+const { restricted } = require('../global');
 
 router.get('/', async (req, res, next) => {
     try {
@@ -9,6 +10,19 @@ router.get('/', async (req, res, next) => {
         next({
             status: 500,
             message: 'Server Errror retreiving snacks... please try again',
+        });
+    }
+});
+
+router.post('/', async (req, res, next) => {
+    let snacks = req.body;
+    try {
+        let addedSnacks = Snacks.addSnacks(snacks.snacks);
+        res.status(200).json(addedSnacks);
+    } catch (e) {
+        next({
+            status: 500,
+            message: 'Failed to add snacks',
         });
     }
 });

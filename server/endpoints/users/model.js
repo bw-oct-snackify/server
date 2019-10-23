@@ -45,7 +45,8 @@ async function getUser(user_ID) {
             'c.name as company_name',
             'u.name as name',
             'email',
-            'admin'
+            'admin',
+            'img_url'
         )
         .from('users as u')
         .join('companies as c', 'c.company_ID', 'u.company_ID')
@@ -66,7 +67,11 @@ async function getUser(user_ID) {
 //
 //Update the user
 async function updateUser(user_ID, info) {
-    let { name, email, img_url = null } = info;
+    let {
+        name,
+        email,
+        img_url = 'https://www.catster.com/wp-content/uploads/2015/06/8698_choc_bosscat_full2.jpg',
+    } = info;
     return db('users')
         .returning([
             'user_ID',
