@@ -33,7 +33,11 @@ async function addUser(user) {
                 .from('companies')
                 .where('company_code', company_code)
                 .first();
-            company_ID = company_ID.company_ID;
+            if (company_ID == undefined) {
+                return Promise.resolve([false]);
+            } else {
+                company_ID = company_ID.company_ID;
+            }
         } catch (e) {
             console.log('addUser: There was an error: ', e);
             Promise.resolve(false);
@@ -51,7 +55,14 @@ async function addUser(user) {
     console.log(company_ID);
 
     return db('users')
-        .returning(['name', 'email', 'company_ID', 'user_ID', 'admin'])
+        .returning([
+            'name',
+            'email',
+            'img_url',
+            'company_ID',
+            'user_ID',
+            'admin',
+        ])
         .insert({
             name,
             email,
