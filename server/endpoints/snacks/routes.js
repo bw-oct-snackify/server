@@ -3,6 +3,7 @@ const Snacks = require('./model');
 const { restricted } = require('../global');
 
 router.get('/', async (req, res, next) => {
+    let search = req.query.search || '';
     let page = parseInt(req.query.page) || 1;
     let limit = parseInt(req.query.limit) || 20;
     console.log(page);
@@ -11,7 +12,7 @@ router.get('/', async (req, res, next) => {
         const startIndex = (page - 1) * limit;
         const endIndex = startIndex + limit;
 
-        let snacks = await Snacks.getSnacks(startIndex, limit);
+        let snacks = await Snacks.getSnacks(startIndex, limit, search);
 
         //Paginate results
         results = {};

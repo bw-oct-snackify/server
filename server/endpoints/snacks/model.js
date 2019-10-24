@@ -1,4 +1,5 @@
 const db = require('../../dbConfig');
+//const knex = require('knex');
 
 module.exports = {
     getSnacks,
@@ -13,10 +14,14 @@ async function getSnackCount() {
     return count;
 }
 
-function getSnacks(page, limit) {
-    return db('snacks')
-        .limit(limit)
-        .offset(page);
+function getSnacks(page, limit, search) {
+    if (search !== '') {
+        return db('snacks').whereRaw(`LOWER(name) LIKE ?`, [`%${search}%`]);
+    } else {
+        return db('snacks')
+            .limit(limit)
+            .offset(page);
+    }
 }
 
 async function addSnacks(snacks) {
