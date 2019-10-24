@@ -11,7 +11,7 @@ const { onlyAdminAction } = require('../global');
 //
 //Get company info
 router.get('/', validCompanyID, async (req, res, next) => {
-    let company_id = req.company_id;
+    let { company_id } = req.params;
 
     try {
         let company_info = await Company.getCompanyInfo(company_id);
@@ -55,7 +55,7 @@ router.put(
 //
 //Get company snacks that they have currently selected
 router.get('/snacks', validCompanyID, async (req, res, next) => {
-    let company_id = req.company_id;
+    let { company_id } = req.params;
     try {
         let snacks = await Company.getSnacks(company_id);
         res.status(200).json(snacks);
@@ -149,7 +149,7 @@ router.delete(
 //
 //Get companies suggested snacks
 router.get('/suggestions', validCompanyID, async (req, res, next) => {
-    let company_id = req.company_id;
+    let { company_id } = req.params;
     try {
         let suggestedSnacks = await Company.getSuggestions(company_id);
         res.status(200).json(suggestedSnacks);
