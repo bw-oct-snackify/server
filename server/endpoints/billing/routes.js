@@ -10,7 +10,7 @@ router.post('/stripe', async (req, res, next) => {
     });
     if (charge) {
         res.status(200).json({
-            message: 'Successfully charged user!',
+            message: 'Muahahaha. Successfully charged user!',
         });
     } else {
         next({

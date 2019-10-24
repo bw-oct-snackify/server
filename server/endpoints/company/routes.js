@@ -5,9 +5,8 @@ const {
     updateCompanyReqs,
     checkIfCompanySnackExists,
 } = require('./middleware');
-const { validUserID } = require('../users/middleware');
-
-const { validSnackID } = require('../users/middleware');
+const { validUserID, validSnackID } = require('../users/middleware');
+const { onlyAdminAction } = require('../global');
 
 //
 //Get company info
@@ -27,22 +26,31 @@ router.get('/', validCompanyID, async (req, res, next) => {
 
 //
 //Update company info
-router.put('/', updateCompanyReqs, validCompanyID, async (req, res, next) => {
-    let company_id = req.company_id;
-    let company = req.body;
-    console.log('company_id: ', company_id);
-    try {
-        let [updatedCompany] = await Company.updateCompany(company_id, company);
-        if (updatedCompany) {
-            res.status(200).json(updatedCompany);
+router.put(
+    '/',
+    onlyAdminAction,
+    updateCompanyReqs,
+    validCompanyID,
+    async (req, res, next) => {
+        let company_id = req.company_id;
+        let company = req.body;
+        console.log('company_id: ', company_id);
+        try {
+            let [updatedCompany] = await Company.updateCompany(
+                company_id,
+                company
+            );
+            if (updatedCompany) {
+                res.status(200).json(updatedCompany);
+            }
+        } catch (e) {
+            next({
+                status: 500,
+                message: `Server error`,
+            });
         }
-    } catch (e) {
-        next({
-            status: 500,
-            message: `Server error`,
-        });
     }
-});
+);
 
 //
 //Get company snacks that they have currently selected
@@ -63,6 +71,7 @@ router.get('/snacks', validCompanyID, async (req, res, next) => {
 //Post company snacks to their snack inventory
 router.post(
     '/snacks/:snack_id',
+    onlyAdminAction,
     validCompanyID,
     validSnackID,
     async (req, res, next) => {
@@ -86,6 +95,7 @@ router.post(
 //TODO: Need to check the quantity and the value of the number
 router.put(
     '/snacks/:snack_id',
+    onlyAdminAction,
     validCompanyID,
     validSnackID,
     checkIfCompanySnackExists,
@@ -113,6 +123,7 @@ router.put(
 //Delete Company Snack
 router.delete(
     '/snacks/:snack_id',
+    onlyAdminAction,
     validCompanyID,
     validSnackID,
     checkIfCompanySnackExists,
@@ -152,34 +163,44 @@ router.get('/suggestions', validCompanyID, async (req, res, next) => {
 
 //
 //Get companies users
-router.get('/users', validCompanyID, async (req, res, next) => {
-    let company_id = req.company_id;
-    try {
-        let users = await Company.getUsers(company_id);
-        res.status(200).json(users);
-    } catch (e) {
-        next({
-            status: 500,
-            message: e,
-        });
+router.get(
+    '/users',
+    onlyAdminAction,
+    validCompanyID,
+    async (req, res, next) => {
+        let company_id = req.company_id;
+        try {
+            let users = await Company.getUsers(company_id);
+            res.status(200).json(users);
+        } catch (e) {
+            next({
+                status: 500,
+                message: e,
+            });
+        }
     }
-});
+);
 
 //Delete company user
-router.delete('/users/:user_id', validUserID, async (req, res, next) => {
-    let { user_id } = req.params;
-    try {
-        await Company.deleteUser(user_id);
-        res.status(200).json({
-            status: true,
-            message: `Successfully deleted user ${user_id}`,
-        });
-    } catch (e) {
-        next({
-            status: 500,
-            message: e,
-        });
+router.delete(
+    '/users/:user_id',
+    onlyAdminAction,
+    validUserID,
+    async (req, res, next) => {
+        let { user_id } = req.params;
+        try {
+            await Company.deleteUser(user_id);
+            res.status(200).json({
+                status: true,
+                message: `Successfully deleted user ${user_id}`,
+            });
+        } catch (e) {
+            next({
+                status: 500,
+                message: e,
+            });
+        }
     }
-});
+);
 
 module.exports = router;

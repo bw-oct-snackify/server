@@ -7,7 +7,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const session = require('express-session');
 const KnexSessionStore = require('connect-session-knex')(session);
-const { restricted, onlyAdminAction } = require('./endpoints/global');
+const { restricted } = require('./endpoints/global');
 
 //
 //Configs
@@ -78,7 +78,7 @@ server.use('/users', restricted, userRoutes);
 server.use('/auth', authRoutes);
 server.use('/snacks', snackRoutes);
 server.use('/packages', packageRoutes);
-server.use('/company/:company_id', restricted, onlyAdminAction, companyRoutes);
+server.use('/company/:company_id', restricted, companyRoutes);
 server.use('/billing', restricted, billingRoutes);
 
 //
