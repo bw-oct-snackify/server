@@ -6,7 +6,7 @@ module.exports = {
 };
 
 async function validCompanyID(req, res, next) {
-    let company_id = req.company_id;
+    let { company_id } = req.params;
     let company = await Company.getCompanyInfo(company_id);
     console.log(company);
     if (company) {
@@ -62,7 +62,7 @@ function updateCompanyReqs(req, res, next) {
 
 async function checkIfCompanySnackExists(req, res, next) {
     let { snack_id } = req.params;
-    let company_id = req.company_id;
+    let { company_id } = req.params;
     try {
         let company_snack = await Company.validSnackRequest(
             company_id,

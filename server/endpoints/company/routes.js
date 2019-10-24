@@ -10,7 +10,7 @@ const { onlyAdminAction } = require('../global');
 
 //
 //Get company info
-router.get('/', validCompanyID, async (req, res, next) => {
+router.get('/:company_id', validCompanyID, async (req, res, next) => {
     let { company_id } = req.params;
 
     try {
@@ -27,7 +27,7 @@ router.get('/', validCompanyID, async (req, res, next) => {
 //
 //Update company info
 router.put(
-    '/',
+    '/:company_id',
     onlyAdminAction,
     updateCompanyReqs,
     validCompanyID,
@@ -54,7 +54,7 @@ router.put(
 
 //
 //Get company snacks that they have currently selected
-router.get('/snacks', validCompanyID, async (req, res, next) => {
+router.get('/:company_id/snacks', validCompanyID, async (req, res, next) => {
     let { company_id } = req.params;
     try {
         let snacks = await Company.getSnacks(company_id);
@@ -70,7 +70,7 @@ router.get('/snacks', validCompanyID, async (req, res, next) => {
 //
 //Post company snacks to their snack inventory
 router.post(
-    '/snacks/:snack_id',
+    '/:company_id/snacks/:snack_id',
     onlyAdminAction,
     validCompanyID,
     validSnackID,
@@ -94,7 +94,7 @@ router.post(
 //Will update the quantity on the snack associated with the company
 //TODO: Need to check the quantity and the value of the number
 router.put(
-    '/snacks/:snack_id',
+    '/:company_id/snacks/:snack_id',
     onlyAdminAction,
     validCompanyID,
     validSnackID,
@@ -122,7 +122,7 @@ router.put(
 //
 //Delete Company Snack
 router.delete(
-    '/snacks/:snack_id',
+    '/:company_id/snacks/:snack_id',
     onlyAdminAction,
     validCompanyID,
     validSnackID,
@@ -148,23 +148,27 @@ router.delete(
 
 //
 //Get companies suggested snacks
-router.get('/suggestions', validCompanyID, async (req, res, next) => {
-    let { company_id } = req.params;
-    try {
-        let suggestedSnacks = await Company.getSuggestions(company_id);
-        res.status(200).json(suggestedSnacks);
-    } catch (e) {
-        next({
-            status: 500,
-            message: e,
-        });
+router.get(
+    '/:company_id/suggestions',
+    validCompanyID,
+    async (req, res, next) => {
+        let { company_id } = req.params;
+        try {
+            let suggestedSnacks = await Company.getSuggestions(company_id);
+            res.status(200).json(suggestedSnacks);
+        } catch (e) {
+            next({
+                status: 500,
+                message: e,
+            });
+        }
     }
-});
+);
 
 //
 //Get companies users
 router.get(
-    '/users',
+    '/:company_id/users',
     onlyAdminAction,
     validCompanyID,
     async (req, res, next) => {
@@ -183,7 +187,7 @@ router.get(
 
 //Delete company user
 router.delete(
-    '/users/:user_id',
+    '/:company_id/users/:user_id',
     onlyAdminAction,
     validUserID,
     async (req, res, next) => {

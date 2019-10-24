@@ -78,7 +78,7 @@ server.use('/users', restricted, userRoutes);
 server.use('/auth', authRoutes);
 server.use('/snacks', snackRoutes);
 server.use('/packages', packageRoutes);
-server.use('/company/:company_id', restricted, companyRoutes);
+server.use('/company', restricted, companyRoutes);
 server.use('/billing', restricted, billingRoutes);
 
 //
