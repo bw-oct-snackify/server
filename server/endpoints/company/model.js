@@ -124,24 +124,20 @@ async function getSuggestions(company_ID) {
         .select('name as company_name')
         .from('companies')
         .where({ company_ID });
-    let snacks = await db
-        .select('s.*', 'cs.quantity')
-        .from('company_snacks as cs')
-        .join('snacks as s', 's.snack_ID', 'cs.snack_ID')
-        .where({ company_ID });
     let userSuggestions = await db
-        .select('u.name', 's.snack_ID')
+        .select('s.*', 'u.name as user_name')
         .from('user_snacks as us')
         .join('users as u', 'u.user_ID', 'us.user_ID')
         .join('snacks as s', 's.snack_ID', 'us.snack_ID')
-        .where('u.company_ID', company_ID);
+        .where('u.company_ID', company_ID)
+        .orderBy('s.snack_ID');
 
     console.log(userSuggestions);
-    let updatedSnacks = mapUsersToSnacks(snacks, userSuggestions);
+    let updatedSnacks = mapUsersToSnacks(userSuggestions);
 
     return {
         ...company,
-        updatedSnacks,
+        snacks: updatedSnacks,
     };
 }
 

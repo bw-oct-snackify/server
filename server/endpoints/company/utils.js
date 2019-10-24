@@ -3,21 +3,23 @@ module.exports = {
     mapSnacksToUsers,
 };
 
-function mapUsersToSnacks(snacks, user_snack) {
-    snacks = snacks.map(snack => {
-        //
-        //Map over each user and add them to the snack
-        let suggestedBy = [];
-        user_snack.forEach(user => {
-            if (user.snack_ID == snack.snack_ID) {
-                suggestedBy.push(user.name);
-            }
-        });
-
-        return {
-            ...snack,
-            suggestedBy,
-        };
+function mapUsersToSnacks(user_snack) {
+    let snack_id = 0;
+    let snack_index = -1;
+    let snacks = [];
+    user_snack.forEach(snack => {
+        if (snack.snack_ID == snack_id) {
+            console.log('here');
+            snacks[snack_index]['users'].push(snack.user_name);
+        } else {
+            let user_name = snack.user_name;
+            delete snack.user_name;
+            snacks.push({ ...snack, users: [user_name] });
+            snack_id = snack.snack_ID;
+            snack_index++;
+            console.log(snack_index);
+        }
+        console.log(snacks);
     });
 
     return snacks;
