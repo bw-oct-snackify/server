@@ -37,4 +37,4 @@ module.exports = {
             directory: './data/seeds',
         },
     },
-}[process.env.NODE_ENV || 'development'];
+}[process.env.NODE_ENV || 'testing'];
