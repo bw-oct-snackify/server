@@ -119,6 +119,8 @@ router.put(
     }
 );
 
+console.log('hello');
+
 //
 //Delete Company Snack
 router.delete(
@@ -133,6 +135,7 @@ router.delete(
         let company_id = req.company_id;
         try {
             let snack = await Company.deleteSnack(company_id, snack_id);
+            console.log(snack);
             res.status(200).json({
                 status: true,
                 message: `Succesfully deleted snack: ${snack_id} from user: ${company_id}`,
